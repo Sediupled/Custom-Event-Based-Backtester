@@ -1,14 +1,15 @@
 import datetime
-import Queue
+import collections
 
 from abc import ABCMeta, abstractmethod
 
-from event import FillEvent, OrderEvent
+from events import FillEvent, OrderEvent
+
 
 class ExecutionHandler(metaclass=ABCMeta):
 
     @abstractmethod
-    def execute_order(self,event):
+    def execute_order(self, event):
         raise NotImplementedError("execute order not made")
 
 
@@ -17,6 +18,13 @@ class SimulatedExecutionHandler(ExecutionHandler):
         self.events = events
 
     def execute_order(self, event):
-        if event.type == 'ORDER':
-            fill_event = FillEvent(datetime.datetime.utcnow(), event.symbol, 'ARCA', event.quantity, event.direction, None)
+        if event.type == "ORDER":
+            fill_event = FillEvent(
+                datetime.datetime.utcnow(),
+                event.symbol,
+                "ARCA",
+                event.quantity,
+                event.direction,
+                None,
+            )
             self.events.put(fill_event)

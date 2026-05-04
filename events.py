@@ -1,67 +1,67 @@
 class Event:
-	""" 
+    """
 
-	Parent Class for all Event Subclasses
-	we are going to be using in this project
+    Parent Class for all Event Subclasses
+    we are going to be using in this project
 
-	""" 
-	pass
+    """
+
+    pass
+
 
 # Used to trigger Strategy to generate a new trade signal
 class MarketEvent(Event):
-	def __init__(self):
-		self.type = "MARKET"
+    def __init__(self):
+        self.type = "MARKET"
+
 
 # Trading advice generated for the Portfolio
 class SignalEvent(Event):
-	def __init__(self, ticker, timestamp, direction):
-		self.type = "SIGNAL"
-		self.ticker = ticker
-		self.timestamp = timestamp
-		self.direction = direction
+    def __init__(self, ticker, timestamp, direction):
+        self.type = "SIGNAL"
+        self.ticker = ticker
+        self.timestamp = timestamp
+        self.direction = direction
+
 
 # Used to Execute an order
 class OrderEvent(Event):
-	def __init__(self, ticker, num_shares, order_type, direction):
-		self.type = "ORDER"
-		self.ticker = ticker
-		self.num_shares = num_shares
-		self.order_type = order_type
-		self.direction = direction
+    def __init__(self, ticker, num_shares, order_type, direction):
+        self.type = "ORDER"
+        self.ticker = ticker
+        self.order_type = order_type
+        self.quantity = quantity
+        self.direction = direction
 
-	def show_order(self):
-		print("-"*20)
-		print(f"Symbol: {self.ticker}\n"
-			"Order Type: {self.order_type}\n"
-			"Amount: {self.num_shares}\n"
-			"Action: {self.direction}")
-		return
+    def show_order(self):
+        print("-" * 20)
+        print(
+            f"Symbol: {self.ticker}\n"
+            "Order Type: {self.order_type}\n"
+            "Amount: {self.num_shares}\n"
+            "Action: {self.direction}"
+        )
+        return
 
 
-# Transaction details after execution of an Order.
 class FillEvent(Event):
-	def __init__(self, timestamp, ticker, exchange, num_shares, price, direction, commission = None):
-		self.type = 'FILL'
+    def __init__(
+        self, timestamp, ticker, exchange, num_shares, price, direction, commission=None
+    ):
+        self.type = "FILL"
         self.datetime = datetime
         self.ticker = ticker
         self.exchange = exchange
-        self.num_shares = num_shares 
+        self.num_shares = num_shares
         self.direction = direction
         self.price = price
 
         self.commission = commission if commission == None else calculate_commision
-     
 
-    """
-    Commission is 1.3 USD minimum with 
-    0.008/share if more than 500 shares otherwise 0.013 /share.
-    Max commision is capped at 0.5% of the trade value
-    """
-
-	def calculate_commision(self):
-		if num_shares >= 500:
-        	full_cost = max(1.3, 0.008*num_shares)
+    def calculate_commision(self):
+        if num_shares >= 500:
+            full_cost = max(1.3, 0.008 * num_shares)
         else:
-        	full_cost = max(1.3, 0.013*num_shares)
+            full_cost = max(1.3, 0.013 * num_shares)
         full_cost = min(full_cost, 0.5 / 100.0 * self.num_shares * self.price)
         return full_cost

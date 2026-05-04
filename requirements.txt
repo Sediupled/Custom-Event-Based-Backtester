@@ -1,0 +1,6 @@
+yfinance
+pandas
+pathlib
+pandas
+numpy
+abc
